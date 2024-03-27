@@ -4,5 +4,7 @@ from .views import *
 
 
 urlpatterns = [
-    path('<str:username>/', my_account, name='my_account'),
+    path('', my_account, name='my_account'),
+    path('transfer/', make_transfer_view, name='transfer'),
+    path('request/', request_view, name='request')
 ]

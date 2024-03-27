@@ -42,7 +42,7 @@ def user_login_view(request):
 
                     messages.success(request, 'Logged in successfully !!')
 
-                    return HttpResponseRedirect(f'/account/{username}/')
+                    return HttpResponseRedirect(f'/account/')
         else:
             form = AuthenticationForm()
 
