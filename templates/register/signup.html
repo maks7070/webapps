@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+    <form action="" method="post" novalidate class="container mt-5">
+        {% csrf_token %}
+
+        {% for fm in form %}
+            <div class="form-group">
+                {{fm.label_tag}}
+                {{fm}}
+                {{fm.errors|striptags}}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-{{ message.tags }} {% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
