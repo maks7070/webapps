@@ -9,6 +9,7 @@
             --color2: #393E46;
             --color3: #00ADB5;
             --color4: #EEEEEE;
+            --color5: #B7C4CF;
         }
 
         html {
@@ -95,7 +96,26 @@
                 font-weight: bold;
                 margin-top: 20px;
             }
-        
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: var(--color5)
+            }
+            tr:nth-child(even) {
+                background-color: var(--color5);
+            }
+            tr{
+                background-color: var(--color4);
+            }
+
         }
     </style>
 
@@ -116,19 +136,47 @@
 
         <section class="twitter">
             <div class="container">
-                <form action="" method="post" novalidate class="container mt-5">
-                    {% csrf_token %}
-
-                    {% for fm in form %}
-                        <div class="form-group">
-                            {{fm.label_tag}}
-                            {{fm}}
-                            {{fm.errors|striptags}}
-                        </div>
+                <h1>Transaction List</h1>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Sender</th>
+                        <th>Recipient</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in page_obj %}
+                        <tr>
+                            <td>{{ transaction.date }}</td>
+                            <td>{{ transaction.sender.user.username }}</td>
+                            <td>{{ transaction.recipient.user.username }}</td>
+                            <td>{{ transaction.amount }}</td>
+                        </tr>
                     {% endfor %}
+                    </tbody>
+                </table>
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                {% if page_obj.has_other_pages %}
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endif %}
             </div>
         </section>
     </main>

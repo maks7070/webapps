@@ -5,17 +5,25 @@
     <style>
         @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
+        :root {
+            --color1: #222831; 
+            --color2: #393E46;
+            --color3: #00ADB5;
+            --color4: #EEEEEE;
+            --color5: #B7C4CF;
+        }
+
         html {
             font-family: Arial;
             font-size: 16px;
-            background: #5e42a6;
+            background: var(--color3);
         }
 
         .sidebar {
             position: fixed;
             width: 25%;
             height: 100vh;
-            background: #312450;
+            background: var(--color4);
             font-size: 0.65em;
         }
 
@@ -41,7 +49,7 @@
                     text-transform: uppercase;
                     text-decoration: none;
                     letter-spacing: 0.4em;
-                    color: rgba(#FFF, 0.35);
+                    color: var(--color1);
                     display: block;
                     transition: all ease-out 300ms;
                 }
@@ -50,7 +58,7 @@
                     position: absolute;
                     width: 100%;
                     height: 0.2em;
-                    background: black;
+                    background: var(--color1);
                     left: 0;
                     bottom: 0;
                     background-image: linear-gradient(to right, #5e42a6, #b74e91)
@@ -93,29 +101,47 @@
         .balance{
             text-align: center;
             font-size: 20px;
-            margin-bottom: 200px;
-            border: 8px solid transparent;
-            border-image: linear-gradient(45deg, red , yellow);
-            border-image-slice: 1;
+            margin-bottom: 50px;
+            border: 4px solid var(--color2);
             border-radius: 10px;
-            padding: 20px 50px 20px 50px;
+            padding: 20px 80px 20px 80px;
         }
 
         .legend{
             text-align: center;
             font-size: 30px;
-            padding-bottom: 40px;
+            padding-bottom: 20px;
 
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--color5)
+        }
+        tr:nth-child(even) {
+            background-color: var(--color5);
+        }
+        tr{
+            background-color: var(--color4);
+        }
+        
     </style>
 
     <main class="main">
         <aside class="sidebar">
             <nav class="nav">
                 <ul>
+                    <li><a href="{% url 'my_account' %}">Main Page</a></li>
                     <li><a href="{% url 'transfer' %}">Make transfer</a></li>
                     <li><a href="{% url 'request' %}">Request transfer</a></li>
-                    <li><a href="#">Transaction history</a></li>
+                    <li><a href="{% url 'history' %}">Transaction history</a></li>
                     <li><a href="#">Profile</a></li>
                     <li><a href="#">Notifications</a> </li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -126,11 +152,34 @@
         <section class="twitter">
             <div class="container">
                 <div class="legend">
-                    <p>Welcome {{ username }}</p>
+                    <p>Welcome {{ user.username }}</p>
                 </div>
                 <div class="balance">
                     <p id="balanceLegend">Total amount:</p>
-                    <p id="balanceAmount">1000£</p>
+                    <p id="balanceAmount">{{ amount }}£</p>
+                </div>
+                <div>
+                    <h2 style="text-align: center">Last transactions</h2>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Sender</th>
+                            <th>Recipient</th>
+                            <th>Amount</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in tran_list %}
+                            <tr>
+                                <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.sender.user.username }}</td>
+                                <td>{{ transaction.recipient.user.username }}</td>
+                                <td>{{ transaction.amount }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>

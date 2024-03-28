@@ -5,6 +5,8 @@ from .forms import SignupForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from payapp.models import Wallet
+
 
 
 # Create your views here.
@@ -15,8 +17,10 @@ def user_signup_view(request):
         form = SignupForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            user = form.save()
+            Wallet.objects.create(user=user, balance=1000)
             messages.success(request, ' Account Created Successfully!')
+            return HttpResponseRedirect(f'/login/')
     else:
 
         form = SignupForm()
@@ -50,7 +54,7 @@ def user_login_view(request):
 
     else:
 
-        return redirect('my_account', username=request.user.get_username())
+        return HttpResponseRedirect(f'/account/')
 
 
 def logout_view(request):
