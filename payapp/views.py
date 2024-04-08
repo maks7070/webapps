@@ -91,3 +91,24 @@ def request_view(request):
         form = RequestForm()
 
     return render(request, 'payapp/request.html', {'form': form})
+
+
+
+
+@login_required
+def notifications_view(request):
+
+    current_user_wallet = Wallet.objects.get(user=request.user)
+
+    transaction_requests = TransferRequest.objects.get(recipient=current_user_wallet)
+    pass
+
+
+
+
+
+
+
+@login_required
+def profile_view(request):
+    pass
