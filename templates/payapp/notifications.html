@@ -9,6 +9,7 @@
             --color2: #393E46;
             --color3: #00ADB5;
             --color4: #EEEEEE;
+            --color5: #B7C4CF;
         }
 
         html {
@@ -96,6 +97,25 @@
                 margin-top: 20px;
             }
 
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: var(--color5)
+            }
+            tr:nth-child(even) {
+                background-color: var(--color5);
+            }
+            tr{
+                background-color: var(--color4);
+            }
+
         }
     </style>
 
@@ -107,8 +127,7 @@
                     <li><a href="{% url 'transfer' %}">Make transfer</a></li>
                     <li><a href="{% url 'request' %}">Request transfer</a></li>
                     <li><a href="{% url 'history' %}">Transaction history</a></li>
-                    <li><a href="#">{% url 'profile' %}</a></li>
-                    <li><a href="#">{% url 'notifications' %}</a> </li>
+                    <li><a href="{% url 'notifications' %}">Notifications</a> </li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
@@ -117,25 +136,43 @@
         <section class="twitter">
             <div class="container">
                 <h2>Transaction requests</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Sender</th>
-                        <th>Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for transaction in page_obj %}
+                {% if page_obj|length == 0%}
+                    <h3>No new notifications</h3>
+                {% else %}
+                    <table>
+                        <thead>
                         <tr>
-                            <td>{{ transaction.date }}</td>
-                            <td>{{ transaction.sender.user.username }}</td>
-                            <td>{{ transaction.recipient.user.username }}</td>
-                            <td>{{ transaction.amount }}</td>
+                            <th>Date</th>
+                            <th>Sender</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for transaction in page_obj %}
+                            <tr>
+                                <td>{{ transaction.date }}</td>
+                                <td>{{ transaction.sender.user.username }}</td>
+                                <td>{{ transaction.amount }}</td>
+                                {% if transaction.completed == False %}
+                                    <td>
+                                        <form method="post" action="{% url 'accept_transaction' transaction.id %}" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="submit" value="Accept">
+                                        </form>
+                                        <form method="post" action="{% url 'reject_transaction' transaction.id %}" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="submit" value="Reject">
+                                        </form>
+                                    </td>
+                                {% else %}
+                                    <td>Completed</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %} 
             </div>
         </section>
     </main>

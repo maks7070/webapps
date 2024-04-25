@@ -115,6 +115,26 @@
             tr{
                 background-color: var(--color4);
             }
+            .pagination {
+                margin-top: 20px;
+            }
+
+            .pagination .step-links {
+                margin-top: 10px;
+            }
+
+            .pagination .step-links a {
+                padding: 5px 10px;
+                text-decoration: none;
+                color: var(--color1);
+                background-color: var(--color4);
+                border-radius: 5px;
+            }
+
+            .pagination .step-links .current {
+                margin: 0 10px;
+                color: var(--color1);
+            }
 
         }
     </style>
@@ -127,8 +147,7 @@
                     <li><a href="{% url 'transfer' %}">Make transfer</a></li>
                     <li><a href="{% url 'request' %}">Request transfer</a></li>
                     <li><a href="{% url 'history' %}">Transaction history</a></li>
-                    <li><a href="#">{% url 'profile' %}</a></li>
-                    <li><a href="#">{% url 'notifications' %}</a> </li>
+                    <li><a href="{% url 'notifications' %}">Notifications</a> </li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>

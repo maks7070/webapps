@@ -1,27 +1,60 @@
 {% extends 'index.html' %}
+{% load crispy_forms_filters %}
+
+{% load crispy_forms_tags %}
+
 
 {% block content %}
-
-    <form action="" method="post" novalidate class="container mt-5">
-        {% csrf_token %}
-
-        {% for fm in form %}
-            <div class="form-group">
-                {{fm.label_tag}}
-                {{fm}}
-                {{fm.errors|striptags}}
-            </div>
-        {% endfor %}
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert {% if message.tags %} alert-{{ message.tags }} {% endif %}" role="alert">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+    <style>
+        
+        :root {
+            --text-color: #283618;
+            --background1: #606c38;
+            --background2: #fefae0;
+        }
+        
+        .block{
+            margin-top: 50px;
+            margin-left: 550px;
+            margin-right: 550px;
+            padding: 20px 50px;
+            
+            
+        }
+        .page-title{
+            text-align: center;
+        }
+        .signup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #my-button{
+            margin-bottom: 15px;
+        }
+    </style>
+    <div class="block">
+        <h1 class="page-title">Sign up</h1>
+        <div class="signup-container">
+            <form action="" method="post" novalidate >
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert{% if message.tags == 'error' %} alert-danger{% elif message.tags == 'success' %} alert-success{% endif %}">
+                            <span class="message">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+        
+                {{ form|crispy }}
+                
+                <button id= "my-button" type="submit" class="btn btn-primary">Submit</button>
+                <p>Click <a href="{% url 'login' %}">here</a> if you already have an account</p>
+            </form>
+        </div>
+    
+    </div>
+    
 
 {% endblock %}

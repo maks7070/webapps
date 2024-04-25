@@ -4,7 +4,7 @@ from .views import *
 
 urlpatterns = [
     # register
-    path('signup/', user_signup_view, name='signup'),
+    path('', user_signup_view, name='signup'),
     # login
     path('login/', user_login_view, name='login'),
     # password reset

@@ -9,6 +9,8 @@ urlpatterns = [
     path('request/', request_view, name='request'),
     path('history/', transaction_history, name='history'),
     path('notifications/', notifications_view, name='notifications'),
-    path('profile/', profile_view, name='profile')
+    path('profile/', profile_view, name='profile'),
+    path('accept_transaction/<int:transaction_id>/', accept_transaction, name='accept_transaction'),
+    path('reject_transaction/<int:transaction_id>/', reject_transaction, name='reject_transaction'),
 
 ]

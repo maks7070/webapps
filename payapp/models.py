@@ -7,19 +7,24 @@ from django.db import models
 
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=6, decimal_places=2, default=1000)
+    balance = models.FloatField(default=1000)
+    currency = models.CharField(max_length=5, default='GBP')
 
 
 class Transaction(models.Model):
     sender = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name="sent_transactions")
     recipient = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='received_transactions')
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    amount = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
 
 
 class TransferRequest(models.Model):
     sender = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name="transaction_requestor")
     recipient = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transaction_payer')
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    amount = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
+
+
+
+# todo add handling for notifications

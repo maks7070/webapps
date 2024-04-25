@@ -1,4 +1,6 @@
 {% extends 'index.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <style>
@@ -95,8 +97,18 @@
                 font-weight: bold;
                 margin-top: 20px;
             }
+            .form-container{
+                border: white 2px solid;
+                text-align: center;
+                padding-top: 50px;
+                padding-right: 20px;
+                padding-left: 20px;
+                padding-bottom: 100px;
+                border-radius: 10px;
+            }
         
         }
+        
     </style>
 
     <main class="main">
@@ -107,8 +119,7 @@
                     <li><a href="{% url 'transfer' %}">Make transfer</a></li>
                     <li><a href="{% url 'request' %}">Request transfer</a></li>
                     <li><a href="{% url 'history' %}">Transaction history</a></li>
-                    <li><a href="#">{% url 'profile' %}</a></li>
-                    <li><a href="#">{% url 'notifications' %}</a> </li>
+                    <li><a href="{% url 'notifications' %}">Notifications</a> </li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
@@ -116,19 +127,24 @@
 
         <section class="twitter">
             <div class="container">
-                <form action="" method="post" novalidate class="container mt-5">
-                    {% csrf_token %}
+                <div class="form-container">
+                    <h2>Transfer menu</h2>
+                    <form action="" method="post" novalidate class="container mt-5">
+                        {% csrf_token %}
 
-                    {% for fm in form %}
-                        <div class="form-group">
-                            {{fm.label_tag}}
-                            {{fm}}
-                            {{fm.errors|striptags}}
-                        </div>
-                    {% endfor %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert{% if message.tags == 'error' %} alert-danger{% elif message.tags == 'success' %} alert-success{% endif %}">
+                                    <span class="message">{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                        {{ form|crispy }}
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
             </div>
         </section>
     </main>

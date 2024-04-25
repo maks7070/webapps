@@ -142,8 +142,7 @@
                     <li><a href="{% url 'transfer' %}">Make transfer</a></li>
                     <li><a href="{% url 'request' %}">Request transfer</a></li>
                     <li><a href="{% url 'history' %}">Transaction history</a></li>
-                    <li><a href="#">{% url 'profile' %}</a></li>
-                    <li><a href="#">{% url 'notifications' %}</a> </li>
+                    <li><a href="{% url 'notifications' %}">Notifications</a> </li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
@@ -156,7 +155,7 @@
                 </div>
                 <div class="balance">
                     <p id="balanceLegend">Total amount:</p>
-                    <p id="balanceAmount">{{ amount }}£</p>
+                    <p id="balanceAmount">{{ amount }}{{ currency }}</p>
                 </div>
                 <div>
                     <h2 style="text-align: center">Last transactions</h2>
