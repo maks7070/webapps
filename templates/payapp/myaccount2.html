@@ -1,0 +1,106 @@
+{% extends 'navbar.html' %}
+
+{% block nav_content %}
+    <style>
+        .content{
+            margin-top: 50px;
+            flex-direction: column;
+            align-items: center;
+        }
+        .details{
+            border: 2px solid #adb5bd;
+            margin: 15px 400px;
+            border-radius: 10px;
+        }
+        .legend{
+            text-align: center;
+            
+        }
+        .legend h1{
+            font-size: 60px;
+        }
+        .accountDetails{
+            text-align: center;
+            
+            
+        }
+        .accountDetails p{
+            font-size: 40px;
+        }
+        .lastTransactions{
+            margin-top:20px;
+        }
+        .lastTransactions table{
+            margin-right: auto;
+            margin-left: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--color5)
+        }
+        tr:nth-child(even) {
+            background-color: var(--color5);
+        }
+        tr{
+            background-color: var(--color4);
+        }
+        
+    </style>
+    
+    
+    
+	<div class="content">
+        <div class="details">
+            <div class="legend">
+                <h1>Welcome {{ user.username }}</h1>
+            </div>
+            <div class="accountDetails">
+                <p id="balanceLegend">Total balance:</p>
+                <p id="balanceAmount">{{ amount }}{{ currency }}</p>
+            </div>
+        </div>
+    
+        <div class="lastTransactions">
+            <h2 style="text-align: center">Last transactions</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Sender</th>
+                    <th>Recipient</th>
+                    <th>Amount</th>
+                    <th>Currency</th>
+                    <th>Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for transaction in tran_list %}
+                    <tr>
+                        <td>{{ transaction.date }}</td>
+                        <td>{{ transaction.sender.user.username }}</td>
+                        <td>{{ transaction.recipient.user.username }}</td>
+                        <td>{{ transaction.amount }}</td>
+                        {% if transaction.sender.currency == 'DOL' %}
+                            <td>&#36;</td>
+                        {% elif transaction.sender.currency == 'EURO' %}
+                            <td>&#8364;</td>
+                        {% else %}
+                            <td>&#163;</td>
+                        {% endif %}
+                        {% if transaction.sender.user.username == user.username%}
+                            <td>Outgoing</td>
+                        {% else %}
+                            <td>Incoming</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

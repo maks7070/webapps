@@ -1,0 +1,138 @@
+{% extends 'navbar.html' %}
+
+{% block nav_content %}
+    <style>
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activeNotifications, .closedRequests {
+            text-align: center;
+            margin-top: 20px; /* Adjust as needed */
+        }
+
+        .activeRequests, .pastRequests {
+            margin-top: 20px; /* Adjust as needed */
+            margin-bottom: 20px; /* Adjust as needed */
+            display: inline-block;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ced4da;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            
+        }
+
+        
+
+
+    </style>
+
+
+
+    <div class="content">
+        <div class="activeNotifications">
+            <h2>Transaction requests</h2>
+            {% if page_obj|length == 0%}
+                <h3>No new notifications</h3>
+            {% else %}
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert{% if message.tags == 'error' %} alert-danger{% elif message.tags == 'success' %} alert-success{% endif %}">
+                            <span class="message">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <table class="activeRequests">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Sender</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in page_obj %}
+                        <tr>
+                            <td>{{ transaction.date }}</td>
+                            <td>{{ transaction.sender.user.username }}</td>
+                            <td>{{ transaction.amount }}</td>
+                            {% if transaction.completed == 'no' %}
+                                <td>
+                                    <form method="post" action="{% url 'accept_transaction' transaction.id %}" style="display: inline-block;">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Accept">
+                                    </form>
+                                    <form method="post" action="{% url 'reject_transaction' transaction.id %}" style="display: inline-block;">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Reject">
+                                    </form>
+                                </td>
+                            {% elif  transaction.completed == 'yes'%}
+                                <td>Completed</td>
+                            {% else %}
+                                <td>Rejected</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="closedRequests">
+            <h1>Past requests</h1>
+            {% if past_transactions|length == 0%}
+                <h3>No past requests</h3>
+            {% else %}
+                <table class="pastRequests">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Sender</th>
+                        <th>Amount</th>
+                        <th>Currency</th>
+                        <th>Outcome</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in past_transactions %}
+                        <tr>
+                            <td>{{ transaction.date }}</td>
+                            <td>{{ transaction.sender.user.username }}</td>
+                            <td>{{ transaction.amount }}</td>
+                            {% if transaction.sender.currency == 'DOL' %}
+                                <td>&#36;</td>
+                            {% elif transaction.sender.currency == 'EURO' %}
+                                <td>&#8364;</td>
+                            {% else %}
+                                <td>&#163;</td>
+                            {% endif %}
+                            {% if transaction.completed == 'yes'%}
+                                <td>Accepted</td>
+                            {% else %}
+                                <td>Rejected</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            
+        </div>
+    </div>
+{% endblock %}

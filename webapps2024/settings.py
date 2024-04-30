@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     "payapp.apps.PayappConfig",
     "converter.apps.ConverterConfig",
     'crispy_forms',
-    'crispy_bootstrap5'
+    'crispy_bootstrap5',
+    'django_extensions'
+
 ]
 
 MIDDLEWARE = [
@@ -129,3 +131,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+#RUNSERVERPLUS_SERVER_ADDRESS_PORT = '127.0.0.1:8000'

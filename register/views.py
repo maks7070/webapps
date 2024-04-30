@@ -23,15 +23,15 @@ def user_signup_view(request):
         if form.is_valid():
             user = form.save()
             currency = form.cleaned_data['currency']
+            balance = float(1000)
             print(currency)
-            balance = 1000
-
             # Each user gets the value of 1000 GBP into their account
             if currency == 'EUR':
-                value = convert('GBP', 'EUR', balance)['converted_amount']
+                print('here')
+                value = convert('GBP', 'EURO', balance)
                 Wallet.objects.create(user=user, balance=value, currency='EURO')
             elif currency == 'DOL':
-                value = convert('GBP', 'USD', balance)['converted_amount']
+                value = convert('GBP', 'DOL', balance)
                 Wallet.objects.create(user=user, balance=value, currency='DOL')
             else:
                 Wallet.objects.create(user=user, balance=balance, currency='GBP')
@@ -82,5 +82,4 @@ def logout_view(request):
     return redirect('login')
 
 
-def password_reset_view(request):
-    pass
+

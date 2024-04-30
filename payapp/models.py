@@ -23,7 +23,7 @@ class TransferRequest(models.Model):
     recipient = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transaction_payer')
     amount = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
-    completed = models.BooleanField(default=False)
+    completed = models.CharField(max_length=100,default='no')
 
 
 
