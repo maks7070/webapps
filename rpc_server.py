@@ -13,6 +13,12 @@ class TimestampHandler:
         return timestamp_thrift.Timestamp(unix_timestamp=current_time)
 
 
+def thrift_server():
+    handler = TimestampHandler()
+    server = make_server(Timestamp, handler, '127.0.0.1', 10000)
+    server.serve()
+
+
 if __name__ == '__main__':
     handler = TimestampHandler()
     server = make_server(Timestamp, handler, '127.0.0.1', 10000)
