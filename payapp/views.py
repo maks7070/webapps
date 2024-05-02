@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
-from .rpc_client import make_timestamp_rpc_call
+from .rpc_client import rpc_call
 
 from .forms import TransferForm, RequestForm
 from .models import Wallet, Transaction, TransferRequest
@@ -97,9 +97,9 @@ def make_transfer_view(request):
                             recipient=recipient_wallet,
                             amount=amount,
 
-                            date=datetime.datetime.fromtimestamp(make_timestamp_rpc_call())
+                            date=datetime.datetime.fromtimestamp(rpc_call())
                         )
-                        # todo fix transfer between same currencies
+
                         sender_wallet.balance -= amount
                         recipient_wallet.balance += converted_amount
                         sender_wallet.save()
@@ -157,7 +157,7 @@ def request_view(request):
                         sender=request_sender_wallet,
                         recipient=request_recipient_user_wallet,
                         amount=amount,
-                        date=datetime.datetime.fromtimestamp(make_timestamp_rpc_call())
+                        date=datetime.datetime.fromtimestamp(rpc_call())
                     )
                     messages.success(request, 'Request sent')
                     redirect('request')
@@ -218,7 +218,7 @@ def notifications_view(request):
 
 
 '''
-
+Function to accept transaction request notification, it works after pressing accept button on the notification page
 '''
 
 
@@ -251,7 +251,7 @@ def accept_transaction(request, transaction_id):
                 sender=recipient_wallet,
                 recipient=sender_wallet,
                 amount=amount,
-                date=datetime.datetime.fromtimestamp(make_timestamp_rpc_call())
+                date=datetime.datetime.fromtimestamp(rpc_call())
             )
 
         else:
@@ -262,6 +262,9 @@ def accept_transaction(request, transaction_id):
     return redirect('notifications')
 
 
+'''
+Function which rejects transaction notifications 
+'''
 @login_required
 @transaction.atomic
 def reject_transaction(request, transaction_id):

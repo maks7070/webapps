@@ -7,7 +7,7 @@ timestamp_thrift = thriftpy2.load(
 Timestamp = timestamp_thrift.TimestampService
 
 
-def make_timestamp_rpc_call():
+def rpc_call():
     try:
         print('here')
         client = make_client(timestamp_thrift.TimestampService, '127.0.0.1', 10000)
@@ -21,5 +21,3 @@ def make_timestamp_rpc_call():
         print('Error2:', e)
 
 
-if __name__ == '__main__':
-    print(make_timestamp_rpc_call())
