@@ -15,34 +15,37 @@ from payapp.util import convert
 # Function which handles user registration, with each user registered a new wallet associated to the user is created.
 # The wallet holds information about balance and which currency the user has decided to use
 def user_signup_view(request):
+    if not request.user.is_authenticated:
 
-    if request.method == "POST":
+        if request.method == "POST":
 
-        form = SignUpForm2(request.POST)
+            form = SignUpForm2(request.POST)
 
-        if form.is_valid():
-            user = form.save()
-            currency = form.cleaned_data['currency']
-            balance = float(1000)
-            print(currency)
-            # Each user gets the value of 1000 GBP into their account
-            if currency == 'EUR':
-                print('here')
-                value = convert('GBP', 'EURO', balance)
-                Wallet.objects.create(user=user, balance=value, currency='EURO')
-            elif currency == 'DOL':
-                value = convert('GBP', 'DOL', balance)
-                Wallet.objects.create(user=user, balance=value, currency='DOL')
-            else:
-                Wallet.objects.create(user=user, balance=balance, currency='GBP')
+            if form.is_valid():
+                user = form.save()
+                currency = form.cleaned_data['currency']
+                balance = float(1000)
+                print(currency)
+                # Each user gets the value of 1000 GBP into their account
+                if currency == 'EUR':
+                    print('here')
+                    value = convert('GBP', 'EURO', balance)
+                    Wallet.objects.create(user=user, balance=value, currency='EURO')
+                elif currency == 'DOL':
+                    value = convert('GBP', 'DOL', balance)
+                    Wallet.objects.create(user=user, balance=value, currency='DOL')
+                else:
+                    Wallet.objects.create(user=user, balance=balance, currency='GBP')
 
-            messages.success(request, ' Account Created Successfully!')
-            return HttpResponseRedirect(f'/login/')
+                messages.success(request, ' Account Created Successfully!')
+                return HttpResponseRedirect(f'/login/')
+        else:
+
+            form = SignUpForm2()
+
+        return render(request, 'register/signup.html', {'form': form})
     else:
-
-        form = SignUpForm2()
-
-    return render(request, 'register/signup.html', {'form': form})
+        return HttpResponseRedirect(f'/account/')
 
 
 # The user_login_view handles the user login through built in AuthenticationForm
