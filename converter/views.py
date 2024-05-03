@@ -13,6 +13,14 @@ conversion_rates = {
     'GBP': {'EURO': 1.1, 'DOL': 1.33}
 }
 
+'''
+Currency converter
+404 - wrong rates
+400 - invalid codes
+200 - great success 
+'''
+
+
 class CurrencyConverter(APIView):
     def get(self, request, currency1, currency2, amount):
         data = {'currency1': currency1, 'currency2': currency2, 'amount': amount}
@@ -22,13 +30,16 @@ class CurrencyConverter(APIView):
 
         validated_data = serializer.validated_data
 
-        if validated_data['currency1'] not in conversion_rates or \
-                validated_data['currency2'] not in conversion_rates[validated_data['currency1']]:
-            return Response({'error': 'Conversion rate not found for the given currencies'}, status=404)
+        if 'currency1' not in validated_data or 'currency2' not in validated_data:
+            return Response({'error': 'invalid currency codes, please change them'}, status=400)
+
+        currency1 = validated_data['currency1']
+        currency2 = validated_data['currency2']
+
+        if currency1 not in conversion_rates or currency2 not in conversion_rates[currency1]:
+            return Response({'error': 'wrong conversion rates'}, status=404)
 
         conversion_rate = conversion_rates[validated_data['currency1']][validated_data['currency2']]
         converted_amount = float(validated_data['amount']) * conversion_rate
 
         return Response({'converted_amount': converted_amount})
-
-
